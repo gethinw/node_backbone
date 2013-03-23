@@ -1,4 +1,1 @@
-node_backbone
-=============
-
-Backbone running on nodejs
+Backbone running on Node

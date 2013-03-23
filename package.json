@@ -1,11 +1,17 @@
 {
-    "name": "node-backbone",
-    "version": "0.1.0",
+    "name": "BackboneOnNode",
+    "version": "0.0.0",
+    "description": "Test app running backbone on node.js",
+    "main": "index.js",
     "dependencies": {
-        "bones": ">=2.4"
+        "backbone": "latest",
+        "underscore": "latest",
+        "express": "latest",
+        "zepto-node": "latest",
+        "domino": "latest",
+        "require-all": "latest"
     },
-    "engines": {
-        "node": "0.8.x",
-        "npm": "1.1.x"
-    }
+    "repository": "",
+    "author": "",
+    "license": "BSD"
 }
