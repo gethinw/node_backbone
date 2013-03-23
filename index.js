@@ -1,34 +1,52 @@
 var Backbone = require('backbone'),
     express = require('express'),
     domino = require('domino'),
-    zepto = require('zepto-node');
+    zepto = require('zepto-node'),
+    mongoose = require('mongoose');
 
 //Backbone needs jquery-esque zepto, and zepto needs a dom...
 Backbone.$ = zepto(domino.createWindow());
 
-var app = express(),
-    store = require('./app/store')(app);
+mongoose.connect("mongodb://gethinw@googlemail.com:Cassette1@alex.mongohq.com:10049/app13891559");
 
-var site = new (store.collections.get('Site'))([
-        {
-            id: 'home',
-            title: 'Homepage',
-            content: 'The main content',
-            footer: 'Footer content'
-        },
-        {
-            id: 'about',
-            title: 'About me',
-            content: 'This is some information about me',
-            footer: 'Footer content'
-        },
-        {
-            id: '404',
-            title: 'An error has occured',
-            content: 'An error has occured',
-            footer: 'Footer content'
+var app = express(),
+    store = app.locals.store = new (require('./app/Store'))('models,collections,views'.split(',')),
+    pageSchema = new mongoose.Schema({
+        _id: String,
+        title: String,
+        content: String,
+        footer: String
+    }),
+    Pages = mongoose.model('Page', pageSchema),
+    site = new (store.collections.get('Site'))(),
+    loadPages = function(err, docs){
+        if (!docs.length) {
+            Pages.create([
+                {
+                    _id: 'home',
+                    title: 'Homepage',
+                    content: 'The main content',
+                    footer: 'Footer content'
+                },
+                {
+                    _id: 'about',
+                    title: 'About me',
+                    content: 'This is some information about me',
+                    footer: 'Footer content'
+                },
+                {
+                    _id: '404',
+                    title: 'An error has occured',
+                    content: 'An error has occured',
+                    footer: 'Footer content'
+                }
+            ]);
+        } else {
+            site.set(docs);
         }
-    ]);
+    };
+
+Pages.find({}, loadPages);
 
 app.use(express.static(__dirname))
     
