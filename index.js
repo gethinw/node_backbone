@@ -13,7 +13,7 @@ var site = new (store.collections.get('Site'))([
         {
             id: 'home',
             title: 'Homepage',
-            content: 'Main content',
+            content: 'The main content',
             footer: 'Footer content'
         },
         {
