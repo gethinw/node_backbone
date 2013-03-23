@@ -7,7 +7,7 @@ var Backbone = require('backbone'),
 //Backbone needs jquery-esque zepto, and zepto needs a dom...
 Backbone.$ = zepto(domino.createWindow());
 
-mongoose.connect("mongodb://gethinw@googlemail.com:Cassette1@alex.mongohq.com:10049/app13891559");
+mongoose.connect(process.env.MONGOHQ_URL||"mongodb://heroku:d2bb8e3744b3a940b17ef48ec85d71be@alex.mongohq.com:10049/app13891559");
 
 var app = express(),
     store = app.locals.store = new (require('./app/Store'))('models,collections,views'.split(',')),
@@ -40,7 +40,10 @@ var app = express(),
                     content: 'An error has occured',
                     footer: 'Footer content'
                 }
-            ]);
+            ], function(err){
+                if (err){console.log('Error', err);}
+            });
+            Pages.find({}, loadPages);
         } else {
             site.set(docs);
         }
@@ -55,7 +58,7 @@ app.use(express.static(__dirname))
             view = new (store.views.get('ViewPage'))({model: page});
         
         if (!page) {
-            next(new Error('Page \'' + req.params.page + '\' not found.'));
+            return next(new Error('Page \'' + req.params.page + '\' not found.'));
         }
         
         res.setHeader('Content-Type', 'text/html');
